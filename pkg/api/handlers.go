@@ -15,12 +15,17 @@ func handleCreateWorkout(c *gin.Context) {
 		c.JSON(400, gin.H{"msg": "No exercises provided"})
 		return
 	}
+	exercises, err := parseExercises(validator)
+	if err != nil {
+		c.JSON(400, gin.H{"msg": err.Error()})
+		return
+	}
 	// Logic here to get the user's ID
 	userID := "SAMPLE_USER_ID"
 	model := models.NewWorkout(
 		validator.Title,
 		userID,
-		validator.Exercises,
+		exercises,
 	)
 	// Persist the model in DB
 	c.JSON(200, model)

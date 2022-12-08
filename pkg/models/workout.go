@@ -27,13 +27,20 @@ type Exercise struct {
 	Time        time.Duration `json:"time"`
 }
 
-func NewExercise(name string, muscleGroup string, weight float64, sets int, reps int, exTime time.Duration) *Exercise {
-	return &Exercise{
-		Name:        name,
-		MuscleGroup: muscleGroup,
-		Weight:      weight,
-		Sets:        sets,
-		Reps:        reps,
-		Time:        exTime,
+func NewExercise(name string, muscleGroup string, weight float64, sets int, reps int, exTime string) (*Exercise, error) {
+	if exTime == "" {
+		exTime = "0s"
+	}
+	if t, err := time.ParseDuration(exTime); err == nil {
+		return &Exercise{
+			Name:        name,
+			MuscleGroup: muscleGroup,
+			Weight:      weight,
+			Sets:        sets,
+			Reps:        reps,
+			Time:        t,
+		}, nil
+	} else {
+		return &Exercise{}, err
 	}
 }
